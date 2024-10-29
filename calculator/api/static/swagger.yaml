@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  title: RPN Calculator
+  version: 1.0.0
+  description: A simple RPN calculator API
+tags:
+  - name: RPN
+    description: RPN API
+paths:
+  /rpn/op/:
+    get:
+      tags:
+        - RPN
+      summary: List all the operands
+      responses:
+        '200':
+          description: A list of operands
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /rpn/op/{operand}/stack/{stack_id}:
+    post:
+      tags:
+        - RPN
+      summary: Apply an operand to a stack
+      parameters:
+        - name: operand
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stack_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stack:
+                    type: string
+        '404':
+          description: Stack not found
+  /rpn/stack/:
+    get:
+      tags:
+        - RPN
+      summary: List the available stacks
+      responses:
+        '200':
+          description: List of available stacks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  stack:
+                    type: array
+    post:
+      tags:
+        - RPN
+      summary: Create a new stack
+      responses:
+        '201':
+          description: New stack created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+  /rpn/stack/{stack_id}:
+    get:
+      tags:
+        - RPN
+      summary: Get a stack
+      parameters:
+        - name: stack_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A stack with requested id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stack:
+                    type: array
+    post:
+      tags:
+        - RPN
+      summary: Push a new value to a stack
+      parameters:
+        - name: stack_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: integer
+                  description: The value to push onto the stack
+      responses:
+        '204':
+          description: New value was added to stack successfully
+        '404':
+          description: Stack not found
+    delete:
+      tags:
+        - RPN
+      summary: Delete a stack
+      parameters:
+        - name: stack_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Stack was deleted successfully
